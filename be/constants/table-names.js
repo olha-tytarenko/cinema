@@ -1,0 +1,9 @@
+exports.GENRE = 'genre';
+exports.GENRE_MOVIE = 'genre_movie';
+exports.HALL = 'hall';
+exports.MOVIE = 'movie';
+exports.ROW = 'row';
+exports.SEANCE = 'seance';
+exports.TICKET = 'ticket';
+exports.USER = 'user';
+exports.USER_HISTORY = 'user_history';
