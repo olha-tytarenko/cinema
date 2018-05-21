@@ -52,22 +52,20 @@ const createTickets = (seanceId, hallId, filmId) => {
 };
 
 exports.createSeance = ({ movieId, hallId, time, date, price }) => {
-  // const seance = {
-  //   id_movie: movieId,
-  //   id_hall: hallId,
-  //   seance_time: time,
-  //   seance_date: date,
-  //   seance_price: price,
-  // };
-  //
-  // connection.query(queries.INSERT(tables.SEANCE), seance, (error, results) => {
-  //   if (error) {
-  //     console.log(error);
-  //     throw error;
-  //   }
-  //
-  //   createTickets(results.insertId, hallId);
-  // });
+  const seance = {
+    id_movie: movieId,
+    id_hall: hallId,
+    seance_time: time,
+    seance_date: date,
+    seance_price: price,
+  };
 
-  createTickets(1, 2, 1);
+  connection.query(queries.INSERT(tables.SEANCE), seance, (error, seance) => {
+    if (error) {
+      console.log(error);
+      throw error;
+    }
+
+    createTickets(seance.insertId, hallId, movieId);
+  });
 };
