@@ -1,0 +1,13 @@
+.seance {
+  display: flex;
+  justify-content: space-between;
+  padding-bottom: 10px;
+}
+
+.seances {
+  &__header {
+    font-size: 1.5rem;
+    font-weight: bold;
+    padding-bottom: 10px;
+  }
+}

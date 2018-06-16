@@ -1,0 +1,77 @@
+.places {
+  .row {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+  }
+
+  .place {
+    width: 30px;
+    height: 30px;
+    margin: 5px;
+    border-radius: 50%;
+    background-color: #003133;
+
+
+
+    &-selected {
+      background-color: blueviolet;
+      cursor: pointer;
+
+      &:hover {
+        opacity: .5;
+      }
+    }
+  }
+
+  .free-place {
+    background-color: #417D80;
+
+    &:hover {
+      opacity: .5;
+      cursor: pointer;
+    }
+  }
+}
+
+.hall-block {
+  max-width: 980px;
+  margin: 0 auto;
+
+  .movie-heading {
+    font-size: 2.3rem;
+    text-align: center;
+  }
+
+  .time {
+    font-size: 2rem;
+    text-align: center;
+    padding-top: 10px;
+  }
+}
+
+.tickets {
+  margin-top: 20px;
+  text-align: center;
+
+  &__heading {
+    font-size: 2rem;
+  }
+
+  &__list {
+    font-size: 1.4rem;
+
+    &-item {
+      margin-bottom: 10px;
+    }
+  }
+}
+
+.total-price {
+  font-size: 1.4rem;
+  margin-bottom: 10px;
+}
+
+.buy-button {
+  padding: 10px;
+}

@@ -1,16 +1,31 @@
 import React, { Component } from 'react';
+import classNames from 'classnames';
+
+import './menu-item.scss';
 
 export class MenuItem extends Component {
+  constructor(props) {
+    super(props);
+
+    this.onClickHandler = this.onClickHandler.bind(this);
+  }
+
+  onClickHandler(e) {
+    e.preventDefault();
+
+    this.props.onClickHandler();
+  }
+
   render() {
     const {
       itemName,
-      itemOnClickHandler,
       isSelected,
     } = this.props;
+    const itemLinkClassNames = classNames('item__link', { 'item__link-selected': isSelected })
 
     return (
-      <li className={isSelected && 'selected'}>
-        <a href="" onClick={itemOnClickHandler}>{itemName}</a>
+      <li className="item">
+        <a className={itemLinkClassNames} href="" onClick={this.onClickHandler}>{itemName}</a>
       </li>
     );
   }

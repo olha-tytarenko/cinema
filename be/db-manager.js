@@ -7,6 +7,7 @@ const tables = require('./constants/table-names');
 const queries = require('./constants/queries');
 const constants = require('./constants/general-constants');
 const utils = require('./utils/date-utils');
+const formatter = require('./utils/data-formatter');
 
 const connection = mysql.createConnection({
   host: 'localhost',
@@ -65,7 +66,6 @@ exports.fillGenreMovie = () => {
     genreMovie.id_movie = i;
     genreMovie.id_genre = Math.round(Math.random() * 12) + 1;
 
-    console.log(genreMovie);
     connection.query(queries.INSERT(tables.GENRE_MOVIE), genreMovie, (err) => {
       if (err) {
         throw err;
@@ -94,7 +94,6 @@ const createTickets = (seanceId, hallId, movieId) => {
 
         for (let i = 0; i < rowCount; i++) {
           for (let j = 0; j < seatsInRow; j++) {
-            console.log(`TICKET: MOVIE: ${movieName}, row: ${i}, seat: ${j}`);
             const ticketRow = i + 1;
             const ticketPlaceNumber = j + 1;
             const pathToQR = path.join('tickets', `${movieId}`, `${ticketRow}_${ticketPlaceNumber}.svg`);
@@ -124,7 +123,6 @@ const createTickets = (seanceId, hallId, movieId) => {
 };
 
 const createSeance = ({ id_movie, id_hall, seance_time, seance_date, seance_price }) => {
-  console.log('CREATE SEANCE');
   const seance = {
     id_movie,
     id_hall,
@@ -161,7 +159,6 @@ exports.createMovie = ({ movie_name, movie_description, movie_rating, movie_adul
       throw error;
     }
 
-    console.log(insertedRow);
   });
 };
 
@@ -204,6 +201,142 @@ exports.sellTickets = () => {
         if (err) {
           throw err;
         }
+      });
+    });
+  });
+};
+
+exports.getGenres = (movieId) => {
+  const sql = 'select genre.genre_name from genre inner join genre_movie on ' +
+    'genre.id_genre = genre_movie.id_genre inner join movie on ' +
+    'genre_movie.id_movie = movie.id_movie where movie.id_movie = ' + movieId;
+
+  return new Promise((resolve, reject) => {
+    connection.query(sql, (err, results) => {
+      if (err) {
+        reject(err);
+      }
+      const genres = results.map(genre => genre.genre_name).join(' ');
+      resolve(genres);
+    });
+  });
+};
+
+exports.getMovieList = () => {
+  const sql = 'select * from movie where movie.id_movie = ?';
+
+  return new Promise((resolve, reject) => {
+    connection.query(sql, [296], (err, results) => {
+      if (err) {
+        reject(err);
+      }
+
+      resolve(results);
+    });
+  }).then((movies) => {
+    const movieList = [];
+    const promises = [];
+
+    movies.forEach((movie) => {
+      const formattedMovie = formatter.formatMovie(movie);
+
+      promises.push(exports.getGenres(movie.id_movie).then((genres) => {
+        formattedMovie.genres = genres;
+        movieList.push(formattedMovie);
+      }));
+    });
+
+    return Promise.all(promises).then(() => movieList);
+  });
+};
+
+exports.getMovieById = (id) => {
+  return new Promise((resolve, reject) => {
+    connection.query(queries.SELECT_BY_ID(tables.MOVIE), [id], (err, movieField) => {
+      if (err) {
+        reject(err);
+      }
+      const formattedMovie = formatter.formatMovie(movieField[0]);
+
+      resolve(formattedMovie);
+    });
+  }).then((movie) => {
+    return exports.getGenres(id).then((genres) => {
+      movie.genres = genres;
+      return movie;
+    });
+  });
+};
+
+exports.getSeancesByMovieId = (id) => {
+  const sql = 'SELECT id_seance, seance_time, seance_date, seance_price, hall.hall_name FROM seance inner join hall ' +
+    'on hall.id_hall = seance.id_hall where seance.id_movie = ?';
+
+  return new Promise((resolve, reject) => {
+    connection.query(sql, [id], (err, fields) => {
+      if (err) {
+        reject(err);
+      }
+
+      const formattedFields = fields.map(seance => formatter.formatSeance(seance));
+      resolve(formattedFields);
+    });
+  });
+};
+
+exports.getSeancesById = (seanceId) => {
+  const sql = 'SELECT id_seance, seance_time, seance_date, seance_price, hall.hall_name FROM seance inner join hall ' +
+    'on hall.id_hall = seance.id_hall where seance.id_seance = ?';
+
+  return new Promise((resolve, reject) => {
+    connection.query(sql, [seanceId], (err, fields) => {
+      if (err) {
+        reject(err);
+      }
+
+      const formattedFields = fields.map(seance => formatter.formatSeance(seance));
+      resolve(formattedFields[0]);
+    });
+  });
+};
+
+exports.getTicketsBySeanceId = (seanceId) => {
+  const selectTickets = 'SELECT * FROM ticket where ticket.id_seance = ?';
+  const selectHallInfo = 'Select hall_row_count, hall_seats_in_row, hall_last_row_seats_count from seance ' +
+    'inner join hall on seance.id_hall = hall.id_hall where seance.id_seance = ?';
+
+  return new Promise((resolve, reject) => {
+    connection.query(selectTickets, [seanceId], (err, fields) => {
+      if (err) {
+        reject(err);
+      }
+
+      connection.query(selectHallInfo, [seanceId], (err, hallInfo) => {
+        if (err) {
+          reject(err);
+        }
+
+        const rowCount = hallInfo[0].hall_row_count;
+        let seatsInRow = hallInfo[0].hall_seats_in_row;
+        const lastRowSeatsCount = hallInfo[0].hall_last_row_seats_count;
+        const ticketsArray = [];
+        let fieldNumber = 0;
+
+        for (let i = 0; i < rowCount; i++) {
+          ticketsArray[i] = [];
+          for (let j = 0; j < seatsInRow; j++) {
+            const formattedTicket = formatter.formatTicket(fields[fieldNumber]);
+            console.log(formattedTicket);
+            ticketsArray[i].push(formattedTicket);
+
+            fieldNumber++;
+          }
+
+          if (lastRowSeatsCount !== seatsInRow && i === rowCount - 2) {
+            seatsInRow = lastRowSeatsCount;
+          }
+        }
+        resolve(ticketsArray);
       });
     });
   });

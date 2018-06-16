@@ -27,10 +27,18 @@ module.exports = {
         },
       },
       {
-        test: /\.css$/,
-        loader: ExtractTextPlugin.extract({
-          use: 'css-loader',
-        }),
+        test: /\.scss$/,
+        use: [
+          {
+            loader: 'style-loader' // creates style nodes from JS strings
+          },
+          {
+            loader: 'css-loader' // translates CSS into CommonJS
+          },
+          {
+            loader: 'sass-loader' // compiles Sass to CSS
+          }
+        ]
       },
     ],
   },
@@ -38,7 +46,6 @@ module.exports = {
     new CopyWebpackPlugin([
       'fe/src/index.html',
     ]),
-    new ExtractTextPlugin('css/styles.css'),
     new webpack.HotModuleReplacementPlugin(),
   ],
 

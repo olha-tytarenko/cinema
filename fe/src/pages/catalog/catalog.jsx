@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import { HeaderContainer, MenuContainer } from '../../components';
+import { HeaderContainer, MenuContainer, MovieListContainer } from '../../components';
 
 export class Catalog extends Component {
   render() {
@@ -8,6 +8,7 @@ export class Catalog extends Component {
       <div>
         <HeaderContainer />
         <MenuContainer />
+        <MovieListContainer />
       </div>
     );
   }

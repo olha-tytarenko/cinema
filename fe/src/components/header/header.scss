@@ -1,0 +1,32 @@
+.header {
+  background-color: #0D4A4D;
+  font-size: 1.5rem;
+
+  &-container {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 20px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    &__greeting {
+      color: #67989A;
+
+      &-name {
+        font-style: italic;
+      }
+    }
+
+    &__button {
+      border: none;
+      padding: 10px 20px;
+      background-color: #67989A;
+      color: #003133;
+
+      &:hover {
+        background-color: #417D80;
+      }
+    }
+  }
+}

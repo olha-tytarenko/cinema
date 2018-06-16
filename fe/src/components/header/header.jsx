@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import './header.scss';
 
 export class Header extends Component {
   constructor(props) {
@@ -20,12 +21,20 @@ export class Header extends Component {
     } = this.props;
 
     return (
-      <header>
-        <div>{isLogged ? `Hello, ${userName}` : 'Welcome'}</div>
-        {isLogged ?
-          <button onClick={signOut}>Sign out</button> :
-          <button onClick={signIn}>Sign in</button>
-        }
+      <header className="header">
+        <div className="header-container">
+          <div className="header-container__greeting">
+            {
+              isLogged ?
+                <span className="header-container__greeting-name">`Hello, ${userName}`</span> :
+                'Welcome'
+            }
+          </div>
+          {isLogged ?
+            <button onClick={signOut} className="header-container__button">Sign out</button> :
+            <button onClick={signIn} className="header-container__button">Sign in</button>
+          }
+        </div>
       </header>
     );
   }

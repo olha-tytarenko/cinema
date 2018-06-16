@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "start": "webpack-dev-server --open",
+    "start": "webpack-dev-server --open --mode development",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -17,8 +17,11 @@
   },
   "homepage": "https://github.com/olya19/test#readme",
   "dependencies": {
+    "classnames": "^2.2.6",
+    "css-reset-and-normalize-sass": "^0.1.2",
     "express": "^4.16.3",
     "history": "^4.7.2",
+    "moment": "^2.22.2",
     "mysql": "^2.15.0",
     "node-fetch": "^2.1.2",
     "qr-image": "^3.2.0",
@@ -49,12 +52,14 @@
     "eslint-plugin-react": "^7.7.0",
     "extract-text-webpack-plugin": "^4.0.0-beta.0",
     "html-webpack-plugin": "^3.2.0",
+    "node-sass": "^4.9.0",
     "react": "^16.3.1",
     "react-dom": "^16.3.1",
     "react-router": "^4.2.0",
     "reset-css": "^3.0.0",
+    "sass-loader": "^7.0.3",
     "style-loader": "^0.20.3",
-    "webpack": "^4.5.0",
+    "webpack": "^4.12.0",
     "webpack-cli": "^2.0.14"
   },
   "babel": {

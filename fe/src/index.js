@@ -12,8 +12,9 @@ import {
   combineReducers,
 } from 'redux';
 
-import { usersListReducer } from './pages/users-list/users-list-reducer';
-import { signInReducer } from './pages/sign-in/sign-in-reducer';
+import { movieListReducer } from './reducers/movie-list';
+import { userInfoReducer } from './reducers/user';
+import { movieReducer } from './reducers/movie-reducer';
 import App from './app';
 
 const history = createBrowserHistory();
@@ -25,11 +26,13 @@ const createStoreWithMiddleware = applyMiddleware(
 )(createStore);
 
 const reducer = combineReducers({
-  usersList: usersListReducer,
-  user: signInReducer,
+  movieList: movieListReducer,
+  user: userInfoReducer,
+  movie: movieReducer,
 });
 
 const store = createStoreWithMiddleware(reducer);
+window.store = store;
 
 ReactDOM.render(
   <Provider store={store}>

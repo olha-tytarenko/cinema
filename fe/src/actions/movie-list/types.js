@@ -1,0 +1,3 @@
+export const GET_MOVIE_LIST = 'GET_MOVIE_LIST';
+export const SAVE_MOVIE_LIST = 'SAVE_MOVIE_LIST';
+export const CLEAR_MOVIE_LIST = 'CLEAR_MOVIE_LIST';
